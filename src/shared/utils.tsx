@@ -1,5 +1,5 @@
 import { Layout, Shape, Txt, View2D } from "@motion-canvas/2d";
-import { createRef, ThreadGenerator } from "@motion-canvas/core";
+import { createRef, linear, ThreadGenerator } from "@motion-canvas/core";
 import { all, waitFor } from "@motion-canvas/core/lib/flow";
 export function* appear(object: Shape, duration = 1): ThreadGenerator {
   let scale = object.scale();
@@ -30,7 +30,8 @@ export function* renderLines(
   for (let i = 0; i < lines.length; i++) {
     yield* linesRef[i]().text(
       addLineBreaks(lines[i], 40),
-      getDuration(lines[i])
+      getDuration(lines[i]),
+      linear
     );
     yield* waitFor(2);
   }
