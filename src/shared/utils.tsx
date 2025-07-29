@@ -9,15 +9,16 @@ export function* appear(object: Shape, duration = 1): ThreadGenerator {
     object.opacity(0).opacity(1, duration)
   );
 }
-export function* renderLines({
-  view,
-  lines,
-  y,
-}: {
-  view: View2D;
-  lines: string[];
-  y: number;
-}): ThreadGenerator {
+export function* renderLines(
+  view: View2D,
+  {
+    lines,
+    y,
+  }: {
+    lines: string[];
+    y: number;
+  }
+): ThreadGenerator {
   const linesRef = lines.map(() => createRef<Txt>());
   view.add(
     <Layout y={y} x={-700} height={100} layout direction="column" rowGap={10}>
