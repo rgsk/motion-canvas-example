@@ -1,7 +1,6 @@
 import { makeProject } from "@motion-canvas/core";
-
-import main from "./scenes/main?scene";
+import manualTree from "./examples/manualTree?scene";
 
 export default makeProject({
-  scenes: [main],
+  scenes: [manualTree],
 });
