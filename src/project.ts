@@ -1,7 +1,7 @@
 import { makeProject } from "@motion-canvas/core";
 
-import sortExample from "./scenes/sortExample?scene";
+import binarySearchFull from "./dsa/binarySearchFull?scene";
 
 export default makeProject({
-  scenes: [sortExample],
+  scenes: [binarySearchFull],
 });

@@ -1,28 +1,56 @@
-import { makeScene2D, Txt } from "@motion-canvas/2d";
-import { waitFor } from "@motion-canvas/core/lib/flow";
+import { Latex, Layout, makeScene2D, Rect, Txt } from "@motion-canvas/2d";
+import { createRef } from "@motion-canvas/core";
+import { sequence, waitFor } from "@motion-canvas/core/lib/flow";
+import { appear, renderLines } from "../shared/utils";
 
 export default makeScene2D(function* (view) {
-  const message = (
-    <Txt text="Binary Search" fontSize={80} fill="#ffffff" opacity={0} />
-  );
-  view.add(message);
+  const message = createRef<Txt>();
+
+  view.add(<Txt text="" ref={message} fontSize={80} fill="#ffffff" />);
 
   // Fade in and out
-  yield* message.opacity(1, 2); // Fade in over 2 seconds
-  yield* message.opacity(0, 1); // Fade out over 1 second
+  yield* message().text("Binary Search", 1);
   yield* waitFor(1); // Wait for 1 second
+  yield* message().opacity(0, 1);
 
-  const heading = (
-    <Txt
-      text={`We are given an array of numbers, and we want to know if a certain number "target" exists in it or not.`}
-      fontSize={30}
-      fill="#ffffff"
-      opacity={0}
-      y={100} // Move it a bit lower
-    />
+  yield* renderLines({
+    view,
+    lines: [
+      `We are given an array of numbers, and we want to know if a certain number "target" exists in it or not.`,
+    ],
+    y: -400,
+  });
+  const values = [5, 4, 2, 1, 3];
+  const n = values.length;
+  const rectangles = Array.from({ length: n }, () => createRef<Rect>());
+  const layout = createRef<Layout>();
+  view.add(
+    <Layout layout ref={layout} gap={20} y={-200}>
+      {rectangles.map((ref, i) => (
+        <Rect
+          ref={ref}
+          grow={1}
+          size={80}
+          stroke={"white"}
+          lineWidth={4}
+          opacity={0}
+        >
+          <Latex tex={`${values[i]}`} fill={"white"} layout={false} scale={1} />
+        </Rect>
+      ))}
+    </Layout>
   );
-  view.add(heading);
+  // showing the rectangles
+  yield* sequence(0.025, ...rectangles.map((ref) => appear(ref(), 1)));
 
-  yield* heading.opacity(1, 1); // Fade in heading over 1s
-  yield* waitFor(10); // Hold for 10 seconds
+  yield* renderLines({
+    view,
+    lines: [
+      `Can you tell, if 2 exists or not?`,
+      `Pretty easy right, can you tell if 3 exists or not, and what about 9?`,
+      "How are we coming to the conclusion that 9 doesn't exists?",
+      "Answer: By checking each element from the beginning of the array to the end.",
+    ],
+    y: -50,
+  });
 });
