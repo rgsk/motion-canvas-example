@@ -5,7 +5,6 @@ import {
   Reference,
   sequence,
   ThreadGenerator,
-  useRandom,
 } from "@motion-canvas/core";
 
 /**
@@ -52,12 +51,11 @@ function* swap(
 }
 
 export default makeScene2D(function* (view) {
-  let random = useRandom();
-  let n = 20;
-
+  const values = [10, 20, 3, 4, 8, 1, 3, 7];
+  const n = values.length;
   const rectangles = Array.from({ length: n }, () => createRef<Rect>());
-  const values = Array.from({ length: n }, () => random.nextFloat());
 
+  const maxValue = Math.max(...values);
   const layout = createRef<Layout>();
   view.add(
     <Layout
@@ -74,7 +72,7 @@ export default makeScene2D(function* (view) {
         <Rect
           ref={ref}
           grow={1}
-          width={(1400 - (n - 1) * 20) / 20}
+          width={(1400 - (n - 1) * 20) / n}
           stroke={"white"}
           fill={"white"}
         />
@@ -85,7 +83,7 @@ export default makeScene2D(function* (view) {
   yield* sequence(
     0.025,
     ...rectangles.map((ref, i) =>
-      ref().height(values[i] * layout().height(), 1)
+      ref().height((values[i] / maxValue) * layout().height(), 1)
     )
   );
 

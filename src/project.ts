@@ -1,7 +1,7 @@
 import { makeProject } from "@motion-canvas/core";
 
-import practice from "./scenes/practice?scene";
+import sortExample from "./scenes/sortExample?scene";
 
 export default makeProject({
-  scenes: [practice],
+  scenes: [sortExample],
 });
