@@ -16,7 +16,7 @@ import {
   sequence,
   Vector2,
 } from "@motion-canvas/core";
-import { appear } from "../scenes/noAnimateSyntax";
+import { appear } from "../shared/utils";
 function under(object: Curve): Vector2 {
   return object.bottom().addY(20);
 }
