@@ -66,7 +66,7 @@ function* linearSearch(view: View2D) {
     lines: [`Linear Search`],
     y: -400,
   });
-  const values = [5, 4, 2, 1, 3];
+  const values = [20, 12, 4, 21, 1, 3, 9, 10, 2, 11, 15, 19];
   const n = values.length;
   const rectangles = Array.from({ length: n }, () => createRef<Rect>());
   const layout = createRef<Layout>();
@@ -76,7 +76,7 @@ function* linearSearch(view: View2D) {
         <Rect
           ref={ref}
           grow={1}
-          size={80}
+          size={90}
           stroke={"white"}
           lineWidth={4}
           opacity={0}
