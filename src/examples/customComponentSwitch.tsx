@@ -2,20 +2,33 @@ import { makeScene2D } from "@motion-canvas/2d";
 
 export default makeScene2D(function* (view) {
   const switchRef = createRef<Switch>();
+  const accent = createSignal<string>("red");
   view.add(
     <>
-      <Switch ref={switchRef} initialState={false} accent={"purple"} />
+      <Switch ref={switchRef} initialState={false} accent={() => accent()} />
     </>
   );
   yield* waitFor(2);
   yield* switchRef().toggle(2);
+  yield* accent("blue", 2);
   yield* switchRef().toggle(2);
 });
 
-import { Circle, Node, NodeProps, Rect } from "@motion-canvas/2d";
+import {
+  Circle,
+  Node,
+  NodeProps,
+  Rect,
+  colorSignal,
+  initial,
+  signal,
+} from "@motion-canvas/2d";
 import {
   Color,
+  ColorSignal,
   PossibleColor,
+  SignalValue,
+  SimpleSignal,
   all,
   createRef,
   createSignal,
@@ -25,31 +38,37 @@ import {
 } from "@motion-canvas/core";
 
 export interface SwitchProps extends NodeProps {
-  initialState?: boolean;
-  accent?: PossibleColor;
+  initialState?: SignalValue<boolean>;
+  accent?: SignalValue<PossibleColor>;
 }
 
 export class Switch extends Node {
+  @initial(false)
+  @signal()
+  public declare readonly initialState: SimpleSignal<boolean, this>;
+
+  @initial("#68ABDF")
+  @colorSignal()
+  public declare readonly accent: ColorSignal<this>;
+
   private isOn: boolean;
   private readonly indicatorPosition = createSignal(0);
   private readonly offColor = new Color("#242424");
   private readonly indicator = createRef<Circle>();
   private readonly container = createRef<Rect>();
-  private color: PossibleColor;
 
   public constructor(props?: SwitchProps) {
     super({
       ...props,
     });
 
-    this.isOn = props.initialState ?? false;
-    this.color = props.accent ?? "red";
+    this.isOn = this.initialState();
     this.indicatorPosition(this.isOn ? 50 : -50);
 
     this.add(
       <Rect
         ref={this.container}
-        fill={this.isOn ? this.color : this.offColor}
+        fill={this.isOn ? this.accent() : this.offColor}
         size={[200, 100]}
         radius={100}
       >
@@ -66,8 +85,8 @@ export class Switch extends Node {
   public *toggle(duration: number) {
     yield* all(
       tween(duration, (value) => {
-        const oldColor = this.isOn ? (this.color as Color) : this.offColor;
-        const newColor = this.isOn ? this.offColor : (this.color as Color);
+        const oldColor = this.isOn ? this.accent() : this.offColor;
+        const newColor = this.isOn ? this.offColor : this.accent();
 
         this.container().fill(
           Color.lerp(oldColor, newColor, easeInOutCubic(value))
