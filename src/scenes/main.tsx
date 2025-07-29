@@ -1,29 +1,20 @@
-import { Latex, makeScene2D, Txt } from "@motion-canvas/2d";
-import { all, createRef } from "@motion-canvas/core";
-import { appear } from "./noAnimateSyntax";
+import { Circle, makeScene2D } from "@motion-canvas/2d";
+import { createRef } from "@motion-canvas/core";
+
+import { ThreadGenerator } from "@motion-canvas/core";
 
 export default makeScene2D(function* (view) {
-  const text = createRef<Txt>();
-  const math = createRef<Latex>();
+  const circle = createRef<Circle>();
+  view.add(<Circle ref={circle} width={100} height={100} />);
 
-  view.add(
-    <>
-      <Txt ref={text} fill={"white"} x={-300}></Txt>
-
-      <Latex
-        ref={math}
-        fill={"white"}
-        x={300}
-        tex={"{{\\sum_{i = 0}}}{{^\\infty}} {{\\frac{1}{2^i}}} = {{2}}"}
-      ></Latex>
-    </>
-  );
-
-  yield* all(text().text("Hello Motion Canvas!", 1), appear(math(), 1));
-
-  // can be diffed!
-  yield* all(
-    text().text("Hello everyone!", 1),
-    math().tex("{{\\sum_{i = 0}}}{{^{42}}} {{\\frac{1}{2^i}}} = {{13}}", 1)
-  );
+  yield* flicker(circle());
 });
+
+function* flicker(circle: Circle): ThreadGenerator {
+  circle.fill("red");
+  yield;
+  circle.fill("blue");
+  yield;
+  circle.fill("red");
+  yield;
+}

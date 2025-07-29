@@ -1,7 +1,7 @@
 import { makeProject } from "@motion-canvas/core";
 
-import binarySearchFull from "./dsa/binarySearchFull?scene";
+import main from "./scenes/main?scene";
 
 export default makeProject({
-  scenes: [binarySearchFull],
+  scenes: [main],
 });
