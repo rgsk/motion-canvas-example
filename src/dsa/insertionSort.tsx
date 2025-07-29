@@ -27,9 +27,10 @@ export default makeScene2D(function* (view) {
   });
   const values = [5, 4, 3, 2, 1];
   const sortedValues = [...values].sort();
-  yield* renderArray(view, { y: 0, values: values, leftText: "Array" });
+  yield* renderArray(view, { y: 50, values: values, leftText: "Array" });
+
   yield* renderArray(view, {
-    y: 200,
+    y: 300,
     values: sortedValues,
     leftText: "Sorted Array",
   });
@@ -61,17 +62,19 @@ function* renderArray(
   const leftTextRef = createRef<Txt>();
   view.add(
     <>
-      <Txt fill={"white"} ref={leftTextRef} />
+      <Txt
+        fill={"white"}
+        ref={leftTextRef}
+        position={[layout().middle().x, y - 100]}
+        fontSize={40}
+      />
     </>
   );
   // showing the rectangles
   yield* sequence(
     0.025,
     leftTextRef().text(leftText, 1),
-    leftTextRef().position(
-      [rectangles[0]().left().x - leftTextRef().width(), y],
-      1
-    ),
+
     ...rectangles.map((ref) => appear(ref(), 1))
   );
 }
